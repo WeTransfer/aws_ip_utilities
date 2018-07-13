@@ -5,6 +5,7 @@ if the AWS IP ranges change.
 
 The prefixes get retrieved from https://ip-ranges.amazonaws.com/ip-ranges.json
 
+[![Build Status](https://travis-ci.com/WeTransfer/aws_ip_utilities.svg?branch=master)](https://travis-ci.com/WeTransfer/aws_ip_utilities)
 
 ## Installation
 
