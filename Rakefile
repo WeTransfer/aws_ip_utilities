@@ -16,6 +16,7 @@ end
 
 desc 'Download the IP ranges from AWS and update the version of the gem'
 task :download_and_bump_version do
+  $stderr.puts "Checking if ip-ranges.json needs an update"
   require 'open-uri'
   require 'json'
   uri = 'https://ip-ranges.amazonaws.com/ip-ranges.json'
