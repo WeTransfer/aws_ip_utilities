@@ -37,4 +37,4 @@ task :download_and_bump_version do
 end
 
 task :default => :spec
-Rake::Task[:release].enhance([:download_and_bump_version])
+task :release_with_ip_data => [:download_and_bump_version, :release]
