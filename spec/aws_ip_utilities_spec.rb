@@ -27,4 +27,13 @@ RSpec.describe AwsIpUtilities do
     expect(AwsIpUtilities).to be_aws_ip('216.137.60.255')
     expect(AwsIpUtilities).not_to be_aws_ip('216.137.64.255')
   end
+
+  it 'properly installs the Rack trusted proxy override' do
+    require 'rack'
+    req = Rack::Request.new({'REMOTE_ADDR' => '127.0.0.1'})
+    expect(req).not_to be_trusted_proxy('216.137.60.47')
+
+    AwsIpUtilities.make_aws_rack_trusted_proxy!
+    expect(req).to be_trusted_proxy('216.137.60.47')
+  end
 end

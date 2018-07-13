@@ -42,10 +42,10 @@ and determine what service it provides:
 AwsIpUtilities.service_for(your_ip_addr) #=> "CLOUDFRONT"
 ```
 
-To make `Rack::Request` trust CloudFront as a proxy (when it gets injected into `X-Forwarded-For`) call the following method:
+To make `Rack::Request` trust all AWS machines as a proxies for determining the client IP (when it gets injected into `X-Forwarded-For`) call the following method:
 
 ```
-AwsIpUtilities.make_cloudfront_rack_trusted_proxy!
+AwsIpUtilities.make_aws_rack_trusted_proxy!
 ```
 
 

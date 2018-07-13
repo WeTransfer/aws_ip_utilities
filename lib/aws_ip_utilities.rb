@@ -36,8 +36,8 @@ module AwsIpUtilities
     end
   end
 
-  def self.make_cloudfront_rack_trusted_proxy!
+  def self.make_aws_rack_trusted_proxy!
     require_relative 'aws_ip_utilities/rack_request_trusted_proxy_override'
-    Rack::Request.prepend(RackRequestTrustedProxyOverride)
+    Rack::Request.prepend(AwsIpUtilities::RackRequestTrustedProxyOverride)
   end
 end
