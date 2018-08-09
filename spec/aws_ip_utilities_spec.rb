@@ -5,8 +5,10 @@ RSpec.describe AwsIpUtilities do
     expect(AwsIpUtilities::VERSION).not_to be nil
   end
 
-  it "has the minor version start with 20 to indicate date" do
-    expect(AwsIpUtilities::VERSION).to match(/\.20\d+$/)
+  it "has the minor version start with a value that is the sync token (timestamp)" do
+    expect(AwsIpUtilities::VERSION).to match(/\.\d+$/)
+    st = AwsIpUtilities::SYNC_TOKEN.to_i
+    expect(st).to be >= 1533583353
   end
 
   it "has the sync token set" do
