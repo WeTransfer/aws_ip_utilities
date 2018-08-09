@@ -4,11 +4,11 @@ require "rspec/core/rake_task"
 RSpec::Core::RakeTask.new(:spec)
 
 desc 'Update the version.rb file with the sync token and the minor version based on modification date'
-task :update_version_tokens, [:sync_token, :modification_date] do |_task, args|
-  version_specifier = args.modification_date.strftime("%Y%m%d")
+task :update_version_tokens, [:sync_token] do |_task, args|
+  version_specifier = args.sync_token
   version_file_contents = File.read(__dir__  + '/lib/aws_ip_utilities/version.rb')
   version_file_contents.gsub!(/(\d+\.\d+\.)(\d+)/, '\1%s' % version_specifier)
-  version_file_contents.gsub!(/SYNC_TOKEN.+$/, 'SYNC_TOKEN = "%s"' % args.sync_token)
+  version_file_contents.gsub!(/SYNC_TOKEN.+$/, 'SYNC_TOKEN = "%s"' % version_specifier)
   File.open(__dir__  + '/lib/aws_ip_utilities/version.rb', 'wb') do |f|
     f << version_file_contents
   end
@@ -23,16 +23,19 @@ task :download_and_bump_version do
   open(uri) do |f|
     raise "Unexpected status #{f.status.inspect}" unless f.status.first == "200"
     parsed = JSON.parse(f.read)
-    cached = JSON.parse(File.read(__dir__  + '/lib/aws_ip_utilities/ip-ranges.json')) rescue nil
+    cached = JSON.parse(File.read(__dir__  + '/lib/aws_ip_utilities/ip-ranges.json'))
 
-    #break if parsed.fetch('syncToken') == cached.fetch('syncToken')
+    if parsed.fetch('syncToken') == cached.fetch('syncToken')
+      $stderr.puts "ip-ranges.json is up to date, no need to bump version"
+      break
+    end
 
     sync_token = parsed.fetch('syncToken')
     last_modified = Time.parse(parsed.fetch('createDate'))
     File.open(__dir__  + '/lib/aws_ip_utilities/ip-ranges.json', 'wb') do |fo|
       fo << JSON.pretty_generate(parsed)
     end
-    Rake::Task["update_version_tokens"].invoke(sync_token, last_modified)
+    Rake::Task["update_version_tokens"].invoke(sync_token)
   end
 end
 
