@@ -21,6 +21,10 @@ RSpec.describe AwsIpUtilities do
     expect(AwsIpUtilities).not_to be_aws_ip('8.8.8.8')
   end
 
+  it "does not raise when the given IP is invalid" do
+    expect(AwsIpUtilities).not_to be_aws_ip('999.999.999.999')
+  end
+
   it "tags Cloudfront IPs in range AWS IP addresses" do
     expect(AwsIpUtilities).to be_aws_ip('216.137.60.1')
     expect(AwsIpUtilities).to be_aws_ip('216.137.60.47')

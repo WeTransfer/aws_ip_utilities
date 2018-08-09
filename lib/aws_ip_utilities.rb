@@ -22,6 +22,8 @@ module AwsIpUtilities
   def self.aws_prefix(ip_addr_string)
     ip = IPAddr.new(ip_addr_string)
     PREFIXES.find {|subnet| subnet.include?(ip) }
+  rescue IPAddr::InvalidAddressError
+    nil
   end
 
   def self.region_for(ip_addr_string)
