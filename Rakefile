@@ -39,7 +39,7 @@ end
 task release_with_ip_data: [:download_and_bump_version, :release]
 
 desc 'Create PR for new IPs'
-task :create_pull_request => [:environment] do
+task :create_pull_request do
   diff = `git diff lib aws_ip_utilities/ip-ranges.json`
   if diff.length == 0
     warn 'No changes so no need to update the gem'
@@ -76,7 +76,7 @@ task :create_pull_request => [:environment] do
 end
 
 desc 'Create PR for new IPs'
-task :push_new_ips_to_master => [:environment] do
+task :push_new_ips_to_master do
   diff = `git diff lib aws_ip_utilities/ip-ranges.json`
   if diff.length == 0
     warn 'No changes so no need to update the gem'
