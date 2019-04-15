@@ -1,5 +1,32 @@
 sudo: false
 language: ruby
 rvm:
-  - 2.3.3
-before_install: gem install bundler -v 1.14.6
+  - 2.4.5
+before_install: gem install bundler -v 1.17.3
+
+jobs:
+  include:
+    - stage: Daily updates
+      name: Daily update for new ip ranges (if any)
+      script:
+        - bundle exec rake download_and_bump_version || travis_terminate 1
+        - git config --global user.email "bot@wetransfer.com"
+        - git config --global user.name "WeTransfer Bot"
+        - git remote add travis_github "https://${GITHUB_TOKEN}@github.com/WeTransfer/aws_ip_utilities.git"
+        - bundle exec rake push_new_ips_to_master
+    - stage: Deploy
+      cache: false
+      deploy:
+        - provider: rubygems
+          script: skip
+          edge:
+            branch: master
+          api_key:
+            secure: <our key goes here>
+          gem: aws_ip_utilities
+          gemspec_glob: 'aws_ip_utilities*.gemspec'
+          on:
+            repo: wetransfer/aws_ip_utilities
+          if: branch = master AND NOT type IN (pull_request)
+  allow_failures:
+
